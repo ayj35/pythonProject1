@@ -67,6 +67,7 @@ class New_Graph_Page:
         self.window.resizable(False,False)
 
         self.data_file=None
+        self.data_filename=None
         self.var_num = 1
 
         self.x_list = []
@@ -175,6 +176,29 @@ class New_Graph_Page:
         self.cells = []
         self.create_table()
 
+    def draw_graph(self):
+        self.ax_A.clear()
+        ax_A.subplot(211)
+        ax_A.scatter ( self.x * self.x_max, self.ny * self.y_max, c='red', label='Training Data' )
+        ax_A.plot ( self.x_test * self.x_max, self.y_pred * self.y_max, c='blue', label='Predictive Mean' )
+        ax_A.fill_between ( self.x_test.flatten ( ) * self.x_max, (self.y_pred - 1.96 * self.std_dev) * self.y_max,
+                           (self.y_pred + 1.96 * self.std_dev) * self.y_max,
+                           color='orange', alpha=0.3, label='Uncertainty' )
+        plt.legend()
+        self.figure_A.draw()
+        
+        self.ax_B.clear()
+        ax_B.subplot(212)
+        ax_B.plot ( self.x_test * self.x_max, self.pi, label='PI', color='purple' )
+        ax_B.plot ( self.x_test * self.x_max, self.ei, label='EI', color='green' )
+
+        ax_B.axvline ( self.best_pi_x * self.x_max, color='purple', linestyle='--', label='next (PI)' )
+        ax_B.axvline ( self.best_ei_x * self.x_max, color='green', linestyle='--', label='next (EI)' )
+        ax_B.legend()
+        
+        self.figure_B.draw()
+        
+
     def create_table(self):
         for cell in self.cells:
             cell.destroy()
@@ -268,6 +292,11 @@ class New_Graph_Page:
         self.max_list = max
         self.create_table()
 
+    def file_save(self):
+        if self.data_file! = None:
+            self.data_filename = "data.txt"
+        else:
+                
 
     def set_page(self):
         self.new_set_page = Parm_Set_Page ( self )
