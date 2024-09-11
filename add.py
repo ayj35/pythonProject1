@@ -68,6 +68,10 @@ class New_Graph_Page:
         self.data_filename = None
         self.var_num = 1
 
+        self.graph_type = ttk.combobox(window,height=5,values=["2D","3D"]
+        self.select_var_num = 1
+        self.select_var = [0]
+
         self.x_list = []
         self.nx_list = []
         self.max_list = []
