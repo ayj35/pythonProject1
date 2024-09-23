@@ -1,3 +1,14 @@
+'''
+To do list
+
+1. 그래프 차원 선택(1변수, 2변수)
+2. 그래프 변수 선택(checkbox로 구현)
+3. skopt 말고 다른 라이브러리 선택지 추가
+4. 오차범위 설정 추가
+5. 
+
+'''
+
 import tkinter
 import tkinter as tk
 import tkinter.ttk as ttk
