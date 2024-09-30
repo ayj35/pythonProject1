@@ -77,6 +77,7 @@ class New_Graph_Page:
 
         self.data_file = None
         self.data_filename = None
+        self.data_file_s = None
         self.var_num = 1
 
         self.graph_type = ttk.combobox(window,height=5,values=["2D","3D"]
@@ -163,6 +164,10 @@ class New_Graph_Page:
         self.label.pack ( side=tk.TOP )
         self.label2 = tk.Label ( self.window, text='Curve2', width=50 )
         self.label2.pack ( side=tk.TOP )
+
+        self.graph_type.pack(side=tk.TOP)
+        tk.Button(self.window, text='apply',command=self.draw_graph).pack(side=tk.TOP)
+        
         tk.Button ( self.window, text='select data.txt', command=self.file_select ).pack ( side=tk.TOP )
 
         tk.Button ( self.window, text='setting', command=self.set_page ).pack ( side=tk.BOTTOM )
@@ -316,8 +321,17 @@ class New_Graph_Page:
         self.draw_graph()
 
     def file_save(self):
-        #if self.data_file! = None:
-            self.data_filename = "data.txt"
+        if self.data_file!=None :
+            self.file_save2();
+        else:
+            self.data_file_s=asksaveasfile(mode="w",defaultextension=".txt")
+            if self.data_file_s is None:
+                return
+            else:
+                self.data_filename = self.data_file_s.name
+                self.file_save2()
+    def file_save2(self):
+        f=open(self.data_file.name,"w")
 
     def set_page(self):
         self.new_set_page = Parm_Set_Page ( self )
