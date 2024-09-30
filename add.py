@@ -7,6 +7,8 @@ To do list
 4. 오차범위 설정 추가
 5. 
 
+https://www.nature.com/articles/s41598-024-60478-9
+
 '''
 
 import tkinter
@@ -365,6 +367,9 @@ class New_Graph_Page:
             print ( self.best_pi_x * self.x_max )
             print ( "next ratio (EI)" )
             print ( self.best_ei_x * self.x_max )
+    def custom_BO(self):
+        
+        
 
 
 class New_Model_Page:
