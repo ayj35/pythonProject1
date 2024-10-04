@@ -32,6 +32,35 @@ from scipy.stats import norm
 
 update_time = 0.01
 
+def rbf_kernel(x1,x2,length_scale=0.3,sigma_f=1.0):
+    x1= np.atleast_2d(x1)
+    x2 = np.atleast_2d(x2)
+    sqdist = np.sum(x1**2,1).reshape(-1,1)+np.sum(x2**2,1)-2*np.dot(x1,x2.T)
+    return sigma_f**2*np.exp(-0.5/length_scale**2 * sqdist)
+
+class Custom_GP:
+    def __init__(self, kernel = rbf_kernel, noise = 1e-8):
+        self.kernel = kernel
+        self.noise = noise
+    
+    def fit(self, x_train, y_train):
+        self.x_train = x_train
+        self.y_train = y_train
+        
+        self.k = self.kernel(x_train,x_train)+self.noise**2*np.eye(len(x_train))
+        self.k_inv = np.linalg.inv(self.k)
+    
+    def predict(self, x_s):
+        print("1")
+        k_s = self.kernel(self.x_train,x_s)
+        print("2")
+        k_ss = self.kernel(x_s,x_s)+self.noise**2 * np.eye(len(x_s))
+        print("3")
+        mu_s = k_s.T.dot(self.k_inv).dot(self.y_train)
+        cov_s = k_ss - k_s.T.dot(self.k_inv).dot(k_s)
+        std_s = np.sqrt(np.maximum(np.diag(cov_s),-np.diag(cov_s)))
+        return mu_s, std_s
+
 
 class Parm_Set_Page:
     def __init__(self, root):
@@ -84,7 +113,11 @@ class New_Graph_Page:
         self.data_file_s = None
         self.var_num = 1
 
-        self.graph_type = ttk.combobox(window,height=5,values=["2D","3D"]
+        self.graph_type = ttk.combobox(window,height=5,values=["2D","3D"])
+        self.model_type = ttk.combobox(window,height=5,values=["sklearn","custom"])
+        self.graph_type.current(0)
+        self.model_type.current(0)
+        
         self.select_var_num = 1
         self.select_var = [0]
 
@@ -170,6 +203,7 @@ class New_Graph_Page:
         self.label2.pack ( side=tk.TOP )
 
         self.graph_type.pack(side=tk.TOP)
+        self.model_type.pack(side-tk.TOP)
         tk.Button(self.window, text='apply',command=self.draw_graph).pack(side=tk.TOP)
         
         tk.Button ( self.window, text='select data.txt', command=self.file_select ).pack ( side=tk.TOP )
@@ -370,6 +404,9 @@ class New_Graph_Page:
             print ( "next ratio (EI)" )
             print ( self.best_ei_x * self.x_max )
     def custom_BO(self):
+
+    def rbf_kernel(self):
+        
         
         
 
