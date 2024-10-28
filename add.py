@@ -117,8 +117,10 @@ class New_Graph_Page:
 
         self.graph_type = ttk.Combobox(self.window, height=5, values=["2D", "3D"])
         self.model_type = ttk.Combobox(self.window, height=5, values=["sklearn", "custom"])
+        self.acq_type = ttk.Combobox(self.window, height=5, values=["basic"])
         self.graph_type.current(0)
         self.model_type.current(0)
+        self.acq_type.current(0)
 
         self.select_var_num = 1
         self.select_var = [0]
@@ -159,7 +161,10 @@ class New_Graph_Page:
         self.x = np.array(self.x)
 
         self.kernel_noise = RBF(length_scale=1.0, length_scale_bounds=(1e-1, 1e2))
-        self.model = GaussianProcessRegressor(kernel=self.kernel_noise)
+        if self.model_type.current()==0:
+            self.model = GaussianProcessRegressor(kernel=self.kernel_noise)
+        else if self.model_type.current()==1:
+            self.model = Custom_GP(kernel=self.kernel_noise)
         self.model.fit(self.x, self.ny)
         self.x_test = np.linspace(0.0, 1.0, 101).reshape(-1, 1)
         self.y_pred, self.std_dev = self.model.predict(self.x_test, return_std=True)
@@ -206,12 +211,13 @@ class New_Graph_Page:
 
         self.graph_type.pack(side=tk.TOP)
         self.model_type.pack(side = tk.TOP)
+        self.acq_type.pack(side=tk.TOP)
         tk.Button(self.window, text='apply', command=self.draw_graph).pack(side=tk.TOP)
 
         tk.Button(self.window, text='select data.txt', command=self.file_select).pack(side=tk.TOP)
 
         tk.Button(self.window, text='setting', command=self.set_page).pack(side=tk.BOTTOM)
-        tk.Label(self.window, text='Curve2', width=50).pack(side=tk.BOTTOM)
+        tk.Button(self.window, text='apply', command=self.draw_graph).pack(side=tk.BOTTOM)
         tk.Label(self.window, text='Curve2', width=50).pack(side=tk.BOTTOM)
         tk.Label(self.window, text='Curve2', width=50).pack(side=tk.BOTTOM)
         tk.Label(self.window, text='Curve2', width=50).pack(side=tk.BOTTOM)
@@ -240,7 +246,10 @@ class New_Graph_Page:
             self.x.append([float(self.x_list[i][0]) / self.x_max])
         self.x = np.array(self.x)
         self.y = np.array(self.y)
-        self.model = GaussianProcessRegressor(kernel=self.kernel_noise)
+        if self.model_type.current()==0:
+            self.model = GaussianProcessRegressor(kernel=self.kernel_noise)
+        else if self.model_type.current()==1:
+            self.model = Custom_GP(kernel=self.kernel_noise)
         self.ny = self.y / self.y_max
         self.model.fit(self.x, self.ny)
         self.x_test = np.linspace(0.0, 1.0, 101).reshape(-1, 1)
